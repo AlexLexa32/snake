@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>snake</title>
+  <style>
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+    #text {
+      color: #1e032e
+    }
+    
+  </style>
+</head>
+<body style="background-color: #0d5348">
+  <h1 id = "text">змейка</h1>
+  <br>
+  <canvas id = "game" width = '608' height = '608'></canvas>
+  <script type="text/javascript">
+    const r = document.getElementById("game");
+    const ctx = r.getContext("2d");
+    const bg = new Image();
+    bg.src = "/Users/tatianagrishanina/Downloads/pole.png";
+    const q = new Image();
+    q.src = "q.png";
+    let box = 32;
+    let score = 0;
+    let f = {
+      x: Math.floor(Math.random() * 17 + 1) * box,
+      y: Math.floor(Math.random() * 17 + 1) * box
+    };
+    let snake = [];
+    snake[0] = {
+      x: 9*box,
+      y: 8*box
+    };
+
+    document.addEventListener("keydown", direction);
+
+    let a;
+
+    function direction(event) {
+      if(event.keyCode == 37 && a != "Right") {
+        a = "Left";
+      } else if(event.keyCode == 38 && a != "Down") {
+        a = "Up";
+      } else if(event.keyCode == 39 && a != "Left") {
+        a = "Right";
+      } else if(event.keyCode == 40 && a != "Up") {
+        a = "Down";
+      }
+    }
+
+    function rendering() {
+      ctx.drawImage(bg, 0, 0);
+      ctx.drawImage(q, f.x, f.y);
+      for (var i = 0; i < snake.length; i++) {
+        ctx.fillStyle = "green";
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      }
+
+      ctx.fillStyle = "white";
+      ctx.font = "40px Arial";
+      ctx.fillText(score, box *2.5, box*1.5);
+
+      let qx = snake[0].x;
+      let qy = snake[0].y;
+
+      if(qx == f.x && qy == f.y) {
+        score++;
+        f = {
+          x: Math.floor(Math.random() * 17 + 1) * box,
+          y: Math.floor(Math.random() * 15 + 1) * box
+        };
+      } else {
+        snake.pop();
+      }
+
+      if(qx < box || qx > box*17 || qy < box || qy > box*17) {
+        clearInterval(w);
+      }
+
+      if(a == "Left") qx -= box;
+      if(a == "Right") qx += box;
+      if(a == "Up") qy -= box;
+      if(a == "Down") qy += box;
+
+      let nh = {
+        x: qx,
+        y: qy
+      };
+
+      snake.unshift(nh);
+    }
+
+    let w = setInterval(rendering, 140);
+  </script>
+</body>
+</html>
